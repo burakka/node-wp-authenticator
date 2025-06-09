@@ -398,8 +398,14 @@ function Valid_Auth(data, auth) {
 				auth.known_hashes_timeout[user_login] = +new Date() + auth.timeout;
 				// parse( auth.known_hashes[user_login].frag, auth.known_hashes[user_login].id );
 			} else {
+				var new_frag;
+				if (data.user_pass.startsWith('$P$') || data.user_pass.startsWith('$2y$')) {
+					new_frag = data.user_pass.substr(8, 4);
+				} else {
+					new_frag = data.user_pass.substr(-4);
+				}
 				auth.known_hashes[user_login] = {
-					frag: data.user_pass.substr(8, 4),
+					frag: new_frag,
 					id: data.ID,
 				};
 				auth.known_hashes_timeout[user_login] = +new Date() + auth.timeout;
